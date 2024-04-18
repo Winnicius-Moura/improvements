@@ -9,7 +9,7 @@ export const UserFormService = ({ user }: UserFormService) => {
   //implementar metodos para get e create user
   //utilizar redux createApi
   // const response = await useGetUserQuery(user.id);
-  //return response
+  //return response  s
 }
 
 /* ----------------example
