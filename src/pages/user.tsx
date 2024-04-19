@@ -1,6 +1,6 @@
-import { UserFormComponent } from "../components/userform"
+import { UserComponent } from "../components/users"
 
 export const UserPage = () => {
-  
-  return <UserFormComponent id="id da url" />
+
+  return <UserComponent id="id da url" />
 }

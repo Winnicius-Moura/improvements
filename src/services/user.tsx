@@ -1,15 +1,27 @@
-import { User } from "../types/user"
-
-interface UserFormService {
-  user: User
-}
+import { useUserLoginMutation } from "../api/user.slice";
+import { Login, LoginResponse } from "../types/user";
 
 
-export const UserFormService = ({ user }: UserFormService) => {
-  //implementar metodos para get e create user
-  //utilizar redux createApi
-  // const response = await useGetUserQuery(user.id);
-  //return response  s
+export const UserApiService = () => {
+
+  const [userLogin, { isLoading, isError, data }] = useUserLoginMutation();
+
+  const login = async (payload: Login) => {
+    try {
+      const result = await userLogin(payload).unwrap();
+      return result;
+    } catch (error) {
+      console.error('Erro fazer login:', error);
+      throw error;
+    }
+  };
+
+  return {
+    login,
+    isLoading,
+    isError,
+    data,
+  };
 }
 
 /* ----------------example
