@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { useUserLoginMutation } from "../api/userApi.slice";
 import { Login } from "../types/user";
+=======
+import { useUserLoginMutation } from "../api/user.slice";
+import { Login, LoginResponse } from "../types/user";
+>>>>>>> baa2a5f482c1a5f28bebbc9eaaf0aa8f3f6eef99
 
 
 export const UserApiService = () => {
@@ -11,7 +16,11 @@ export const UserApiService = () => {
       const result = await userLogin(payload).unwrap();
       return result;
     } catch (error) {
+<<<<<<< HEAD
       console.error('UserApiService => Erro fazer login:', error);
+=======
+      console.error('Erro fazer login:', error);
+>>>>>>> baa2a5f482c1a5f28bebbc9eaaf0aa8f3f6eef99
       throw error;
     }
   };
