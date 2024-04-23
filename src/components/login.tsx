@@ -1,24 +1,16 @@
-import { useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { UserApiService } from "../services/user"
-import { Login } from "../types/user"
 
+export const LoginComponent = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { user, login, isLoading, isError } = UserApiService()
 
-
-export const LoginComponent = ({ username, password }: Login) => {
-  const [_, setSearchParams] = useSearchParams()
-
-  const [user, setUser] = useState<Login>({
-    username: username,
-    password: password
-  })
-  const { data, login, isLoading, isError, } = UserApiService()
 
   const handleLogin = async () => {
     try {
       const response = await login({
-        username: username ?? '',
-        password: password ?? '',
+        username: searchParams.get('username') || '',
+        password: searchParams.get('password') || ''
       })
       console.log('Login successful:', response)
     } catch (error) {
@@ -26,64 +18,56 @@ export const LoginComponent = ({ username, password }: Login) => {
     }
   }
 
-
-  const handleUrlState = ({ username, password }: Login) => {
-    setSearchParams(state => {
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const username = e.target.value
+    setSearchParams((params) => {
       if (username) {
-        state.set('username', username)
+        params.set('username', username)
       } else {
-        state.delete('username')
+        params.delete('username')
       }
-
-      return state
-    })
-
-    setSearchParams(state => {
-      if (password) {
-        state.set('password', password)
-      } else {
-        state.delete('password')
-      }
-
-      return state
+      return params
     })
   }
 
-  return <div>
-    <button onClick={() => {
-      handleUrlState({
-        username: user!.username,
-        password: user!.password,
-      })
-    }}>Url State</button>
-    <input
-      key={'usrInput'}
-      alt="username"
-      type="text"
-      placeholder="Username"
-      value={user?.username || ''}
-      onChange={(e) => setUser({
-        ...user,
-        username: e.target.value,
-      } as Login)}
-    />
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const password = e.target.value
+    setSearchParams((params) => {
+      if (password) {
+        params.set('password', password)
+      } else {
+        params.delete('password')
+      }
+      return params
+    })
+  }
 
-    <input
-      key={'pwdInput'}
-      alt="password"
-      type="password"
-      placeholder="Password"
-      value={user?.password || ''}
-      onChange={(e) => setUser({
-        ...user,
-        password: e.target.value,
-      } as Login)}
-    />
-    <div>Url params from loginPage Username: {username}, Password: {password}</div>
+  return (
+    <div>
+      <input
+        key="usrInput"
+        alt="username"
+        type="text"
+        placeholder="Username"
+        value={searchParams.get('username') || ''}
+        onChange={handleUsernameChange}
+      />
 
-    <button onClick={handleLogin} disabled={isLoading}>Login</button>
-    {isError && <p>Error during login. Please try again.</p>}
-    {data && <p>Login successful! Welcome, {data.data.username}</p>}
-    {data && <p>{data.message}</p>}
-  </div >
+      <input
+        key="pwdInput"
+        alt="password"
+        type="password"
+        placeholder="Password"
+        value={searchParams.get('password') || ''}
+        onChange={handlePasswordChange}
+      />
+
+      <button onClick={handleLogin} disabled={isLoading}>
+        Login
+      </button>
+      {isError && <p>Error during login. Please try again.</p>}
+      {user && <p>Login successful! Welcome, {user.data.username}</p>}
+      {user && <p>{user.message}</p>}
+    </div>
+  )
 }
