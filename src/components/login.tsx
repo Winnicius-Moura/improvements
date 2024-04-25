@@ -1,9 +1,14 @@
+import { CookieUtils } from "essencials"
+import { useSelector } from "react-redux"
 import { useSearchParams } from "react-router-dom"
+import { RootState } from "../redux/store"
 import { UserApiService } from "../services/user"
 
 export const LoginComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { user, login, isLoading, isError } = UserApiService()
+  const userGlobalState = useSelector((state: RootState) => state.userInfo.data.username)
+  const cookie = CookieUtils.getCookie('tk')
 
 
   const handleLogin = async () => {
@@ -41,7 +46,8 @@ export const LoginComponent = () => {
       return params
     })
   }
-
+  console.log('LOGIN COMPONENTE BUILD')
+  
   return (
     <div>
       <input
@@ -62,11 +68,22 @@ export const LoginComponent = () => {
         onChange={handlePasswordChange}
       />
 
+      {/* <Button
+        onClick={handleLogin}
+        disabled={isLoading}
+        startIcon={isLoading ? <CircularProgress size={24} color="inherit" /> : null}
+      >
+        {user?.data ? <CheckIcon /> : isError ? <CloseIcon /> : 'Login'}
+      </Button> */}
+
       <button onClick={handleLogin} disabled={isLoading}>
         Login
       </button>
+      {userGlobalState && <p>estado global user {userGlobalState}</p>}
+      {cookie && <p>Cookie token {cookie}</p>}
+
       {isError && <p>Error during login. Please try again.</p>}
-      {user && <p>Login successful! Welcome, {user.data.username}</p>}
+      {user && <p>Login successful! Welcome, {user?.data?.username}</p>}
       {user && <p>{user.message}</p>}
     </div>
   )

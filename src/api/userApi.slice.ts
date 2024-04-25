@@ -32,18 +32,21 @@ export const userApiSlice = createApi({
         message: response.message
       }),
 
+
       // onQueryStarted: async (arg, { queryFulfilled, dispatch, getState }) => {
       onQueryStarted: async (queryFulfilled) => {
         try {
           const { username } = await queryFulfilled;
-          // Executar ações após a mutation ser bem sucedida
+          // Executar ações no início da mutation ser bem sucedida
           console.log('onQueryStarted => Usuario logado com sucesso:', username);
           // Por exemplo, disparar uma ação Redux
+          //chamar um loading
+          //atualizar valores do cookie
           // dispatch({ type: 'user/addSuccess', payload: user });
         } catch (error) {
           console.error("Erro ao efetuar login:", error);
         }
-      }
+      },      
     }),
   }),
 })

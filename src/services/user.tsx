@@ -1,16 +1,29 @@
+import { CookieUtils } from "essencials";
+import { useDispatch } from "react-redux";
 import { useUserLoginMutation } from "../api/userApi.slice";
+import { toggleLoading } from "../redux/reducers/loadingBar.slice";
+import { setUserInfo } from "../redux/reducers/userInfo.slice";
 import { Login } from "../types/user";
 
 
-export const UserApiService = () => {
 
+export const UserApiService = () => {
+  const dispatch = useDispatch();
   const [userLogin, { isLoading, isError, data: user }] = useUserLoginMutation();
 
   const login = async (payload: Login) => {
     try {
+      dispatch(toggleLoading())
       const result = await userLogin(payload).unwrap();
+      CookieUtils.setCookie('tk', result.data.token, 1)
+      CookieUtils.setCookie('ui', result.data.username, 1)
+
+      dispatch(setUserInfo(result))
+      dispatch(toggleLoading())
+      //variável de controle de para impedir chamar novamente
       return result;
     } catch (error) {
+      dispatch(toggleLoading())
       console.error('UserApiService => Erro fazer login:', error);
       throw error;
     }
