@@ -3,6 +3,8 @@ import { useSelector } from "react-redux"
 import { useSearchParams } from "react-router-dom"
 import { RootState } from "../redux/store"
 import { UserApiService } from "../services/user"
+import Questionnaire from "./formPaginated"
+import questionsPayload from "./data"
 
 export const LoginComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -49,7 +51,16 @@ export const LoginComponent = () => {
   console.log('LOGIN COMPONENTE BUILD')
   
   return (
-    <div>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      textAlign: 'start',
+      border: 1,
+      borderColor: 'white',
+      // width: 100
+    }}>
       <input
         key="usrInput"
         alt="username"
@@ -85,6 +96,7 @@ export const LoginComponent = () => {
       {isError && <p>Error during login. Please try again.</p>}
       {user && <p>Login successful! Welcome, {user?.data?.username}</p>}
       {user && <p>{user.message}</p>}
+      <Questionnaire questions={questionsPayload}/>
     </div>
   )
 }
